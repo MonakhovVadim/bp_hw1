@@ -42,12 +42,9 @@ try:
         # Добавляем сообщение в сбор информации
         messages.loc[message["id"], method.routing_key] = message["body"]
         row = messages.loc[message["id"]]
-        print(row)
-        print(row.notnull())
 
         # Если вся информация заполнена, то вычисляем метрику и записываем в файл
         if row.notnull().all():
-            print("вычисляем метрику")
             absolute_error = abs(row[NAME_Y_TRUE] - row[NAME_Y_PRED])
             with log.open("a") as f:
                 values = [
@@ -56,8 +53,6 @@ try:
                     row[NAME_Y_PRED],
                     absolute_error,
                 ]
-                print("строка для записи:")
-                print(",".join(str(i) for i in values))
                 f.write(f"{','.join(str(i) for i in values)}\n")
 
     # Извлекаем сообщение из очереди y_true
